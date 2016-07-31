@@ -59,8 +59,8 @@ const sendInputs = () => {
             if (data.success != '') {
                 let message = `${getTime()} ${chalk.green('[')}${chalk.blue(data.user)}${chalk.green(']')} ${chalk.white(data.success)}`;
                 console.log(message);
-                setTimeout(prompt,3);
             }
+            setTimeout(prompt,3);
         })
         .fail(function(jqXHR, textStatus, errorThrown) {
             console.log('Something has gone wrong....')
