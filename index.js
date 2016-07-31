@@ -85,7 +85,7 @@ const main = () => {
         let text = input.toString().trim();
         // Check for repl termination comand
         if (text === '/exit') {
-            console.log('Good Bye Friend.')
+            console.log('Good Bye Friend.');
             stdin.destroy();
             return;
         }
