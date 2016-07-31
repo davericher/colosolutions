@@ -2,31 +2,21 @@
 const nQuery = require('najax');
 const chalk = require('chalk');
 const messages = require('./messages');
+const helpers = require('./helpers');
 
 // Hold on to the inputs (used for numbering the index)
 let inputs = [];
 
 // Chat Start
-const chatIntro = () => {
+const motd = (cb) => {
     messages.chatIntro.forEach((value, key) => {
         setTimeout(() => {
-            console.log(value.replace('==',chalk.yellow('==')).replace('***', chalk.red('***')));
-            if(key == messages.chatIntro.length - 1) {
-                main();
+            console.log(helpers.getTime() + '  ' + value.replace('==', chalk.yellow('==')).replace('***', chalk.red('***')));
+            if (key == messages.chatIntro.length - 1) {
+                cb();
             }
         }, key * 300);
     });
-};
-
-// Get Time
-const getTime = () => {
-    var time = new Date(),
-        hrs = time.getHours(),
-        mins = time.getMinutes();
-    if (hrs < 10) hrs = '0' + hrs;
-    if (mins < 10) mins = '0' + mins;
-    var fTime = '[' + hrs + ":" + mins + ']';
-    return fTime;
 };
 
 // Get Input
@@ -57,10 +47,10 @@ const sendInputs = () => {
         })
         .done(function(data, textStatus, jqXHR) {
             if (data.success != '') {
-                let message = `${getTime()} ${chalk.green('[')}${chalk.blue(data.user)}${chalk.green(']')} ${chalk.white(data.success)}`;
+                let message = `${helpers.getTime()} ${chalk.green('[')}${chalk.blue(data.user)}${chalk.green(']')} ${chalk.white(data.success)}`;
                 console.log(message);
             }
-            setTimeout(prompt,3);
+            setTimeout(prompt, 3);
         })
         .fail(function(jqXHR, textStatus, errorThrown) {
             console.log('Something has gone wrong....')
@@ -69,15 +59,12 @@ const sendInputs = () => {
 
 // User Prompt
 const prompt = () => {
-    process.stdout.write(`${getTime()} ${chalk.green('[')}${chalk.red('D0loresH4ze')}${chalk.green(']')} `);
+    process.stdout.write(`${helpers.getTime()} ${chalk.green('[')}${chalk.red('D0loresH4ze')}${chalk.green(']')} `);
 };
 
 // main
-const main = () => {
-    // Begin
-    console.log(chalk.bgWhite.black('H3ll0 F413nd. use /exit to escape.'));
+const repl = () => {
     prompt();
-
     // Listen for keyboard input
     const stdin = process.openStdin();
     stdin.addListener("data", function(input) {
@@ -94,4 +81,9 @@ const main = () => {
     });
 };
 
-chatIntro();
+const init = () => {
+    console.log(chalk.bgWhite.black('H3ll0 F413nd. use /exit to escape.'));
+    motd(repl);
+};
+
+init();
