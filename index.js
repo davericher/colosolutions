@@ -1,23 +1,10 @@
 'use strict';
 const nQuery = require('najax');
 const chalk = require('chalk');
-const messages = require('./messages');
 const helpers = require('./helpers');
 
 // Hold on to the inputs (used for numbering the index)
 let inputs = [];
-
-// Chat Start
-const motd = (cb) => {
-    messages.chatIntro.forEach((value, key) => {
-        setTimeout(() => {
-            console.log(helpers.getTime() + '  ' + value.replace('==', chalk.yellow('==')).replace('***', chalk.red('***')));
-            if (key == messages.chatIntro.length - 1) {
-                cb();
-            }
-        }, key * 300);
-    });
-};
 
 // Get Input
 const getInputs = () => {
@@ -50,21 +37,16 @@ const sendInputs = () => {
                 let message = `${helpers.getTime()} ${chalk.green('[')}${chalk.blue(data.user)}${chalk.green(']')} ${chalk.white(data.success)}`;
                 console.log(message);
             }
-            setTimeout(prompt, 3);
+            helpers.prompt();
         })
         .fail(function(jqXHR, textStatus, errorThrown) {
             console.log('Something has gone wrong....')
         });
 };
 
-// User Prompt
-const prompt = () => {
-    process.stdout.write(`${helpers.getTime()} ${chalk.green('[')}${chalk.red('D0loresH4ze')}${chalk.green(']')} `);
-};
-
 // main
 const repl = () => {
-    prompt();
+    helpers.prompt();
     // Listen for keyboard input
     const stdin = process.openStdin();
     stdin.addListener("data", function(input) {
@@ -81,9 +63,4 @@ const repl = () => {
     });
 };
 
-const init = () => {
-    console.log(chalk.bgWhite.black('H3ll0 F413nd. use /exit to escape.'));
-    motd(repl);
-};
-
-init();
+helpers.start(repl);
